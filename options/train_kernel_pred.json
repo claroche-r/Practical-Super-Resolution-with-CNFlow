@@ -1,0 +1,72 @@
+{
+  "task": "realsrmd-kernelpred-gan-finetune"     //  root/task/images-models-options
+  , "model": "kernel-pred"
+  , "gpu_ids": [6]
+
+  , "n_channels": 3  // broadcast to "datasets", 1 for grayscale, 3 for color
+  , "path_RealSRMD": "real-srmd/realsrmd-rrdb-gan-finetune/models/latest_G.pth"
+
+  , "path": {
+    "root": "kernel_pred"      // "denoising" | "superresolution"
+    , "pretrained_netG": null      // path of pretrained model
+  }
+
+  , "datasets": {
+    "train": {
+      "name": "train_dataset"
+      , "dataset_type": "real-srmd"
+      , "dataroot_H": "/data/datasets_charles/dataset_SR/div2k_HR_patches" // path of H training dataset
+      , "dataroot_L": null              // path of L training dataset
+      , "H_size": 128                    // patch size 40 | 64 | 96 | 128 | 192
+      , "dataloader_shuffle": true
+      , "dataloader_num_workers": 32
+      , "dataloader_batch_size": 64    // batch size 1 | 16 | 32 | 48 | 64 | 128
+      , "ksize": 33
+      , "custom_blur_kern_path": "kernels/custom_blur.mat"
+      , "custom_down_kern_path": "kernels/custom_down_div2k.mat"
+      , "gpu_ids": [2]
+      , "noiseflow-path": "/home/claroche/Documents/repo/RobustSR/noiseflow/NoiseFlowSIDD-final/models/latest_G.pth"
+    }
+    , "test": {
+      "name": "test_dataset"
+      , "dataset_type": "real-srmd"
+      , "dataroot_H": "training_data/div2k_test"   // path of H testing dataset
+      , "dataroot_L": null              // path of L testing dataset
+      , "ksize": 33
+      , "custom_blur_kern_path": "kernels/custom_blur.mat"
+      , "custom_down_kern_path": "kernels/custom_down_div2k.mat"
+      , "gpu_ids": [2]
+      , "noiseflow-path": "/home/claroche/Documents/repo/RobustSR/noiseflow/NoiseFlowSIDD-final/models/latest_G.pth"
+    }
+  }
+
+  , "netG": {
+    "net_type": "Predictor"  // "dncnn" | "fdncnn" | "ffdnet" | "srmd" | "dpsr" | "msrresnet0" |  "msrresnet1" | "rrdb"
+    , "in_nc": 3       // input channel number
+    , "out_nc": 50       // ouput channel number
+    , "init_type": "xavier_normal"         // "orthogonal" | "normal" | "uniform" | "xavier_normal" | "xavier_uniform" | "kaiming_normal" | "kaiming_uniform"
+    , "init_bn_type": "uniform"         // "uniform" | "constant"
+    , "init_gain": 0.2
+  }
+
+  , "train": {
+    "G_loss_type": "l1"               // "l1" preferred | "l2sum" | "l2" | "ssim"
+    , "G_loss_weight": 1.0            // default
+
+    , "G_optimizer_type": "adam"        // fixed, adam is enough
+    , "G_optimizer_lr": 1e-4            // learning rate
+    , "G_optimizer_clipgrad": null      // unused
+
+    , "G_scheduler_type": "MultiStepLR" // "MultiStepLR" is enough
+    , "G_scheduler_milestones": [2185, 3496]
+    , "G_scheduler_gamma": 0.1
+
+    , "G_regularizer_orthstep": null    // unused
+    , "G_regularizer_clipstep": null    // unused
+
+    , "checkpoint_test": 437           // for testing
+    , "checkpoint_save": 2185         // for saving model
+    , "checkpoint_print": 1           // for print
+    , "n_epochs" : 10
+  }
+}

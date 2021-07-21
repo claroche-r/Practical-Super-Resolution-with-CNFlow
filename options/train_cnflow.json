@@ -1,0 +1,67 @@
+{
+  "task": "cnflow"     //  root/task/images-models-options
+  , "model": "cnflow"
+  , "gpu_ids": [0]
+
+  , "n_channels": 3
+  , "scale": 1
+
+  , "path": {
+    "root": "cnflow"      // "cnflow" | "sr
+    , "pretrained_netG": null      // path of pretrained model
+  }
+
+  , "datasets": {
+    "train": {
+      "name": "train_dataset"           // just name
+      , "dataset_type": "cnflow"          // "sr" | "cnflow"
+      , "dataroot": "data/dataset_cnflow"// path of training dataset
+      , "H_size": 128                    // patch size 40 | 64 | 96 | 128 | 192
+      , "dataloader_shuffle": true
+      , "dataloader_num_workers": 32
+      , "dataloader_batch_size": 64    // batch size 1 | 16 | 32 | 48 | 64 | 128
+      , "ISO_list": ["100", "200", "800", "400", "1600", "3200"]  // list of the ISO to use in your dataset
+    }
+    , "test": {
+      "name": "test_dataset"            // just name
+      , "dataset_type": "cnflow"        // "sr" | "cnflow"
+      , "dataroot": "data/dataset_cnflow_test"  // path of testing dataset
+      , "ISO_list": ["800"]  // list of the ISO to use in your dataset
+    }
+  }
+
+  , "netG": {
+    "net_type": "cnflow"
+    , "in_nc": 3
+    , "in_nc_cond": 4
+    , "affine_nc": 64
+    , "n_flow": 4
+    , "nb": 3
+    , "actnorm_scale": "1.0"
+    , "LU_decomposed": true
+
+    , "init_type": "xavier_normal"         // "orthogonal" | "normal" | "uniform" | "xavier_normal" | "xavier_uniform" | "kaiming_normal" | "kaiming_uniform"
+    , "init_bn_type": "uniform"         // "uniform" | "constant"
+    , "init_gain": 0.2
+    , "affine_eps": 0.0001
+  }
+
+  , "train": {
+      "G_optimizer_type": "adam"        // fixed, adam is enough
+    , "G_optimizer_lr": 1e-5            // learning rate
+    , "G_optimizer_clipgrad": null
+
+    , "G_scheduler_type": "MultiStepLR" // "MultiStepLR" is enough
+    , "G_scheduler_milestones": [1000, 2000]
+    , "G_scheduler_gamma": 0.5
+
+    , "G_regularizer_orthstep": null
+    , "G_regularizer_clipstep": null
+
+    , "checkpoint_test": 100           // for testing
+    , "checkpoint_save": 100           // for saving model
+    , "checkpoint_print": 1            // for print
+    , "n_epochs": 10
+    , "current_step": 0                // if you train in several steps
+  }
+}
