@@ -8,10 +8,6 @@ from torch.nn.parallel import DataParallel  # , DistributedDataParallel
 from models.select_network import define_G
 from models.model_base import ModelBase
 from models.network_sr import RealSRMD, RealSRMD_RRDB
-from models.loss_ssim import SSIMLoss
-
-from utils.utils_model import test_mode
-from utils.utils_regularizers import regularizer_orth, regularizer_clip
 
 
 class ModelPrediction(ModelBase):
