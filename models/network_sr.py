@@ -3,21 +3,6 @@ import torch.nn as nn
 import models.basicblock as B
 import torch
 
-"""
-# --------------------------------------------
-# RealSRMD (15 conv layers)
-# --------------------------------------------
-Reference:
-@inproceedings{zhang2018learning,
-  title={Learning a single convolutional super-resolution network for multiple degradations},
-  author={Zhang, Kai and Zuo, Wangmeng and Zhang, Lei},
-  booktitle={IEEE Conference on Computer Vision and Pattern Recognition},
-  pages={3262--3271},
-  year={2018}
-}
-http://openaccess.thecvf.com/content_cvpr_2018/papers/Zhang_Learning_a_Single_CVPR_2018_paper.pdf
-"""
-
 
 class RRDB(nn.Module):
     """
