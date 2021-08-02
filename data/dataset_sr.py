@@ -34,7 +34,9 @@ class DatasetSR(data.Dataset):
                            "nb": 3, "in_nc_cond": 4, "LU_decomposed": True,"actnorm_scale": 1.,
                            "affine_eps": 0.0001, "init_type": "orthogonal", "init_bn_type": "normal",
                            "init_gain": 0.2}
+
         cnflow_path = opt['cnflow-path']
+        print(type(cnflow_path))
         self.load_cnflow(cnflow_path)
 
         # ------------------------------------

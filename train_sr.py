@@ -36,7 +36,7 @@ def main():
     # update opt
     # ----------------------------------------
     # -->-->-->-->-->-->-->-->-->-->-->-->-->-
-    current_step = opt['current_step'] if opt['current_step'] else 0
+    current_step = opt['train']['current_step'] if opt['train']['current_step'] else 0
     border = opt['scale']
     # --<--<--<--<--<--<--<--<--<--<--<--<--<-
 

@@ -35,7 +35,7 @@ def main():
     # update opt
     # ----------------------------------------
     # -->-->-->-->-->-->-->-->-->-->-->-->-->-
-    current_step = opt['current_step'] if opt['current_step'] else 0
+    current_step = opt['train']['current_step'] if opt['train']['current_step'] else 0
     # --<--<--<--<--<--<--<--<--<--<--<--<--<-
 
     # ----------------------------------------
@@ -123,94 +123,87 @@ def main():
     n_epochs = opt["train"]["n_epochs"] if opt["train"]["n_epochs"] else 200
 
     for epoch in range(n_epochs):
-        with torch.profiler.profile(schedule=torch.profiler.schedule(wait=2, warmup=2, active=6, repeat=1),
-                                    on_trace_ready=torch.profiler.tensorboard_trace_handler(
-                                        os.path.join(opt['path']['log'], 'tensorboard'))) \
-                as profiler:
-            for i, train_data in enumerate(train_loader):
+        for i, train_data in enumerate(train_loader):
 
-                current_step += 1
+            current_step += 1
 
-                # -------------------------------
-                # 1) update learning rate
-                # -------------------------------
-                model.update_learning_rate(current_step)
+            # -------------------------------
+            # 1) update learning rate
+            # -------------------------------
+            model.update_learning_rate(current_step)
 
-                # -------------------------------
-                # 2) feed patch pairs
-                # -------------------------------
-                model.feed_data(train_data)
+            # -------------------------------
+            # 2) feed patch pairs
+            # -------------------------------
+            model.feed_data(train_data)
 
-                # -------------------------------
-                # 3) optimize parameters
-                # -------------------------------
-                model.optimize_parameters(current_step)
+            # -------------------------------
+            # 3) optimize parameters
+            # -------------------------------
+            model.optimize_parameters(current_step)
 
-                #profiler.step()
+            # -------------------------------
+            # 4) training information
+            # -------------------------------
+            if current_step % opt['train']['checkpoint_print'] == 0:
+                logs = model.current_log()  # such as loss
+                message = '<epoch:{:3d}, iter:{:8,d}, lr:{:.3e}> '.format(epoch, current_step, model.current_learning_rate())
+                for k, v in logs.items():  # merge log information into message
+                    message += '{:s}: {:.3e} '.format(k, v)
+                    writer.add_scalar(k, v, current_step)
+                logger.info(message)
 
-                # -------------------------------
-                # 4) training information
-                # -------------------------------
-                if current_step % opt['train']['checkpoint_print'] == 0:
-                    logs = model.current_log()  # such as loss
-                    message = '<epoch:{:3d}, iter:{:8,d}, lr:{:.3e}> '.format(epoch, current_step, model.current_learning_rate())
-                    for k, v in logs.items():  # merge log information into message
-                        message += '{:s}: {:.3e} '.format(k, v)
-                        writer.add_scalar(k, v, current_step)
-                    logger.info(message)
+            # -------------------------------
+            # 5) save model
+            # -------------------------------
+            if current_step % opt['train']['checkpoint_save'] == 0:
+                logger.info('Saving the model.')
+                model.save(current_step)
 
+            # -------------------------------
+            # 6) testing
+            # -------------------------------
+            if current_step % opt['train']['checkpoint_test'] == 0:
 
-                # -------------------------------
-                # 5) save model
-                # -------------------------------
-                if current_step % opt['train']['checkpoint_save'] == 0:
-                    logger.info('Saving the model.')
-                    model.save(current_step)
+                avg_likelihood = 0.0
+                idx = 0
 
-                # -------------------------------
-                # 6) testing
-                # -------------------------------
-                if current_step % opt['train']['checkpoint_test'] == 0:
+                for test_data in test_loader:
+                    idx += 1
+                    image_name_ext = os.path.basename(test_data['clean_path'][0])
+                    img_name, ext = os.path.splitext(image_name_ext)
 
-                    avg_likelihood = 0.0
-                    idx = 0
+                    img_dir = os.path.join(opt['path']['images'], img_name)
+                    util.mkdir(img_dir)
 
-                    for test_data in test_loader:
-                        idx += 1
-                        image_name_ext = os.path.basename(test_data['clean_path'][0])
-                        img_name, ext = os.path.splitext(image_name_ext)
+                    model.feed_data(test_data)
+                    nll = model.test(1.0)
 
-                        img_dir = os.path.join(opt['path']['images'], img_name)
-                        util.mkdir(img_dir)
+                    visuals = model.current_visuals()
+                    E_img = util.tensor2uint(visuals['E'])
+                    clean_img = util.tensor2uint(visuals['clean'])
 
-                        model.feed_data(test_data)
-                        nll = model.test(1.0)
+                    # -----------------------
+                    # save estimated image E
+                    # -----------------------
+                    if current_step % opt['train']['checkpoint_save'] == 0:
+                        save_img_path = os.path.join(img_dir, '{:s}_{:d}.png'.format(img_name, current_step))
+                        util.imsave(E_img, save_img_path)
 
-                        visuals = model.current_visuals()
-                        E_img = util.tensor2uint(visuals['E'])
-                        clean_img = util.tensor2uint(visuals['clean'])
+                    logger.info('{:->4d}--> {:>10s} | nll: {:<4.2f}'.format(idx, image_name_ext, nll))
 
-                        # -----------------------
-                        # save estimated image E
-                        # -----------------------
-                        if current_step % opt['train']['checkpoint_save'] == 0:
-                            save_img_path = os.path.join(img_dir, '{:s}_{:d}.png'.format(img_name, current_step))
-                            util.imsave(E_img, save_img_path)
+                    avg_likelihood += nll
 
-                        logger.info('{:->4d}--> {:>10s} | nll: {:<4.2f}'.format(idx, image_name_ext, nll))
+                avg_likelihood = avg_likelihood / idx
 
-                        avg_likelihood += nll
+                writer.add_images('Test set generation', np.concatenate((clean_img, E_img), axis=0), epoch,
+                                  dataformats='HWC')
+                writer.add_scalar('PSNR', avg_likelihood, current_step)
 
-                    avg_likelihood = avg_likelihood / idx
-
-                    writer.add_images('Test set generation', np.concatenate((clean_img, E_img), axis=0), epoch,
-                                      dataformats='HWC')
-                    writer.add_scalar('PSNR', avg_likelihood, current_step)
-
-                    # testing log
-                    logger.info('<epoch:{:3d}, iter:{:8,d}, Average likelihood : {:<.2f}dB\n'.format(epoch,
-                                                                                                     current_step,
-                                                                                                     avg_likelihood))
+                # testing log
+                logger.info('<epoch:{:3d}, iter:{:8,d}, Average likelihood : {:<.2f}dB\n'.format(epoch,
+                                                                                                 current_step,
+                                                                                                 avg_likelihood))
     logger.info('Saving the final model.')
     model.save('latest')
     logger.info('End of training.')

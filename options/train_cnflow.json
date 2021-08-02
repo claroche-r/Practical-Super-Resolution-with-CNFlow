@@ -15,17 +15,18 @@
     "train": {
       "name": "train_dataset"           // just name
       , "dataset_type": "cnflow"          // "sr" | "cnflow"
-      , "dataroot": "data/dataset_cnflow"// path of training dataset
+      , "dataroot": "datasets/dataset_cnflow"// path of training dataset
       , "H_size": 128                    // patch size 40 | 64 | 96 | 128 | 192
       , "dataloader_shuffle": true
-      , "dataloader_num_workers": 32
-      , "dataloader_batch_size": 64    // batch size 1 | 16 | 32 | 48 | 64 | 128
-      , "ISO_list": ["100", "200", "800", "400", "1600", "3200"]  // list of the ISO to use in your dataset
+      , "dataloader_num_workers": 1
+      , "dataloader_batch_size": 1    // batch size 1 | 16 | 32 | 48 | 64 | 128
+      , "ISO_list": ["800", "400", "1600", "3200"]  // list of the ISO to use in your dataset
     }
     , "test": {
       "name": "test_dataset"            // just name
       , "dataset_type": "cnflow"        // "sr" | "cnflow"
-      , "dataroot": "data/dataset_cnflow_test"  // path of testing dataset
+      , "H_size": 128
+      , "dataroot": "datasets/dataset_cnflow"  // path of testing dataset
       , "ISO_list": ["800"]  // list of the ISO to use in your dataset
     }
   }
@@ -58,8 +59,8 @@
     , "G_regularizer_orthstep": null
     , "G_regularizer_clipstep": null
 
-    , "checkpoint_test": 100           // for testing
-    , "checkpoint_save": 100           // for saving model
+    , "checkpoint_test": 1           // for testing
+    , "checkpoint_save": 1           // for saving model
     , "checkpoint_print": 1            // for print
     , "n_epochs": 10
     , "current_step": 0                // if you train in several steps

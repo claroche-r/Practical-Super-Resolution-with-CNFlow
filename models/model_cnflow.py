@@ -95,7 +95,7 @@ class CNFlowModel(ModelBase):
         pixels = self.noisy.size()[-1] * self.noisy.size()[-2]
         nll = (-objective) / float(np.log(2.) * pixels)
         nll_loss = torch.mean(nll)
-        loss_G_total = nll_loss * self.G_lossfn_weight
+        loss_G_total = nll_loss
 
         loss_G_total.backward()
         self.G_optimizer.step()

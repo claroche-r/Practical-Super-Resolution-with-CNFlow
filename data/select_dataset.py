@@ -1,10 +1,10 @@
 def define_Dataset(dataset_opt):
     dataset_type = dataset_opt['dataset_type'].lower()
 
-    if dataset_type in ['cnflow']:
+    if dataset_type == 'cnflow':
         from data.dataset_cnflow import DatasetCNFlow as D
 
-    if dataset_type in ['sr', 'super-resolution']:
+    elif dataset_type == 'sr' or dataset_type == 'super-resolution':
         from data.dataset_sr import DatasetSR as D
 
     else:

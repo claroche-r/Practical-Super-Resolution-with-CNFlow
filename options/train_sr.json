@@ -20,25 +20,24 @@
     "train": {
       "name": "train_dataset"
       , "dataset_type": "sr"
-      , "dataroot": "data/dataset_sr" // path of H training dataset
+      , "dataroot": "datasets/dataset_sr" // path of H training dataset
       , "H_size": 128                    // patch size 40 | 64 | 96 | 128 | 192
       , "dataloader_shuffle": true
-      , "dataloader_num_workers": 32
-      , "dataloader_batch_size": 64    // batch size 1 | 16 | 32 | 48 | 64 | 128
+      , "dataloader_num_workers": 1
+      , "dataloader_batch_size": 1    // batch size 1 | 16 | 32 | 48 | 64 | 128
       , "ksize": 33
       , "custom_blur_kern_path": "kernels/custom_blur.mat"
       , "custom_down_kern_path": "kernels/custom_down.mat"
-      , "cnflow-path": "models_zoo/cnflow.pth"
+      , "cnflow-path": "C:/Users/claroche/Documents/GitHub/Practical-Super-Resolution-with-CNFlow/models_zoo/cnflow.pth"
     }
     , "test": {
       "name": "test_dataset"
-      , "dataset_type": "real-srmd"
-      , "dataroot": "data/dataset_sr_test"   // path of H testing datasett
+      , "dataset_type": "sr"
+      , "dataroot": "datasets/dataset_sr"   // path of H testing datasett
       , "ksize": 33
       , "custom_blur_kern_path": "kernels/custom_blur.mat"
       , "custom_down_kern_path": "kernels/custom_down.mat"
-      , "gpu_ids": [2]
-      , "noiseflow-path": "models_zoo/cnflow.pth"
+      , "cnflow-path": "C:/Users/claroche/Documents/GitHub/Practical-Super-Resolution-with-CNFlow/models_zoo/cnflow.pth"
     }
   }
 
@@ -77,10 +76,10 @@
     , "G_regularizer_orthstep": null    // unused
     , "G_regularizer_clipstep": null    // unused
 
-    , "checkpoint_test": 100           // for testing
-    , "checkpoint_save": 100         // for saving model
+    , "checkpoint_test": 1           // for testing
+    , "checkpoint_save": 1         // for saving model
     , "checkpoint_print": 1           // for print
-    , "n_epochs" : 100
+    , "n_epochs" : 10
     , "current_step": 0    // if you train in several steps
   }
 }
