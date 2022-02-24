@@ -13,18 +13,18 @@
 
 HR | Bicubic            |  ESRGAN | IKC | RealSRMD 
 :-:|:------------------:|:-------:|:---:|:------:
-![](images/gopro/rect.png)  |  ![](images/gopro/bicubic.png)  | ![](images/gopro/ESRGAN.png)  | ![](images/gopro/IKC.png)  | ![](images/gopro/RealSRMD.png)  |
+![](images/gopro/Rect.png)  |  ![](images/gopro/Bicubic.png)  | ![](images/gopro/ESRGAN.png)  | ![](images/gopro/IKC.png)  | ![](images/gopro/RealSRMD.png)  |
 
 ## SR on SIDD images
 
 HR | Bicubic            |  ESRGAN | IKC | RealSRMD 
 :-:|:------------------:|:-------:|:---:|:------:
-![](images/SIDD/rect.png)  |  ![](images/SIDD/bicubic.png)  | ![](images/SIDD/ESRGAN.png)  | ![](images/SIDD/IKC.png)  | ![](images/SIDD/RealSRMD.png)  |
+![](images/SIDD/Rect.png)  |  ![](images/SIDD/Bicubic.png)  | ![](images/SIDD/ESRGAN.png)  | ![](images/SIDD/IKC.png)  | ![](images/SIDD/RealSRMD.png)  |
 
 ## Noise generation comparison
 Clean | Noisy            |  CNFlow
 :----:|:----------------:|:-------:
-![](images/NoiseFlow/gt_big.png)  |  ![](images/NoiseFlow/noisy_big.png)   | ![](images/NoiseFlow/noiseflow_big.png) |
+![](images/Noiseflow/gt_big.png)  |  ![](images/Noiseflow/noisy_big.png)   | ![](images/Noiseflow/noiseflow_big.png) |
 
 ## Realworld degradations
 
