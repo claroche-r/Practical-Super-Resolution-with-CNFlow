@@ -19,7 +19,7 @@ HR | Bicubic            |  ESRGAN | IKC | RealSRMD
 
 HR | Bicubic            |  ESRGAN | IKC | RealSRMD 
 :-:|:------------------:|:-------:|:---:|:------:
-![](images/SIDD/Rect.png)  |  ![](images/SIDD/Bicubic.png)  | ![](images/SIDD/ESRGAN.png)  | ![](images/SIDD/IKC.png)  | ![](images/SIDD/RealSRMD.png)  |
+![](images/SIDD/rect.png)  |  ![](images/SIDD/Bicubic.png)  | ![](images/SIDD/ESRGAN.png)  | ![](images/SIDD/IKC.png)  | ![](images/SIDD/RealSRMD.png)  |
 
 ## Noise generation comparison
 Clean | Noisy            |  CNFlow
